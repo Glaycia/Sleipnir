@@ -5,7 +5,7 @@
 #include <cmath>
 #include <cstddef>
 
-#include <Eigen/SparseCholesky>
+#include <Eigen/BlockedLBLT.h>
 #include <Eigen/SparseCore>
 
 #include "Inertia.hpp"
@@ -15,14 +15,14 @@
 namespace sleipnir {
 
 /**
- * Solves systems of linear equations using a regularized LDLT factorization.
+ * Solves systems of linear equations using a regularized LBLT factorization.
  */
-class RegularizedLDLT {
+class RegularizedLBLT {
  public:
   /**
-   * Constructs a RegularizedLDLT instance.
+   * Constructs a RegularizedLBLT instance.
    */
-  RegularizedLDLT() = default;
+  RegularizedLBLT() = default;
 
   /**
    * Reports whether previous computation was successful.
@@ -30,7 +30,7 @@ class RegularizedLDLT {
   Eigen::ComputationInfo Info() { return m_info; }
 
   /**
-   * Computes the regularized LDLT factorization of a matrix.
+   * Computes the regularized LBLT factorization of a matrix.
    *
    * @param lhs Left-hand side of the system.
    * @param numEqualityConstraints The number of equality constraints in the
@@ -117,7 +117,7 @@ class RegularizedLDLT {
   }
 
   /**
-   * Solve the system of equations using a regularized LDLT factorization.
+   * Solve the system of equations using a regularized LBLT factorization.
    *
    * @param rhs Right-hand side of the system.
    */
@@ -127,7 +127,7 @@ class RegularizedLDLT {
   }
 
  private:
-  Eigen::SimplicialLDLT<Eigen::SparseMatrix<double>> m_solver;
+  Eigen::BlockedLBLT<Eigen::SparseMatrix<double>> m_solver;
 
   Eigen::ComputationInfo m_info = Eigen::Success;
 

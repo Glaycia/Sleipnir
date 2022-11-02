@@ -12,7 +12,7 @@
 #include <fmt/core.h>
 
 #include "Filter.hpp"
-#include "RegularizedLDLT.hpp"
+#include "RegularizedLBLT.hpp"
 #include "ScopeExit.hpp"
 #include "sleipnir/autodiff/Expression.hpp"
 #include "sleipnir/autodiff/Gradient.hpp"
@@ -451,7 +451,7 @@ Eigen::VectorXd OptimizationProblem::InteriorPoint(
       m_decisionVariables.size() + m_equalityConstraints.size(),
       m_decisionVariables.size() + m_equalityConstraints.size());
 
-  RegularizedLDLT solver;
+  RegularizedLBLT solver;
 
   int acceptableIterCounter = 0;
   constexpr int maxAcceptableIterations = 15;

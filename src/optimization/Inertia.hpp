@@ -4,6 +4,7 @@
 
 #include <cstddef>
 
+#include <Eigen/BlockedLBLT.h>
 #include <Eigen/SparseCholesky>
 #include <Eigen/SparseCore>
 
@@ -39,13 +40,13 @@ class Inertia {
    */
   template <typename MatrixType>
   explicit Inertia(const MatrixType& matrix) {
-    Eigen::SimplicialLDLT<MatrixType> solver{matrix};
+    Eigen::BlockedLBLT<MatrixType> solver{matrix};
 
-    auto D = solver.vectorD();
-    for (int row = 0; row < D.rows(); ++row) {
-      if (D(row) > 0.0) {
+    auto B = solver.matrixB();
+    for (int row = 0; row < B.rows(); ++row) {
+      if (B.coeff(row, row) > 0.0) {
         ++positive;
-      } else if (D(row) < 0.0) {
+      } else if (B.coeff(row, row) < 0.0) {
         ++negative;
       } else {
         ++zero;
@@ -54,18 +55,18 @@ class Inertia {
   }
 
   /**
-   * Constructs the Inertia type with the inertia of the given LDLT
+   * Constructs the Inertia type with the inertia of the given LBLT
    * decomposition.
    *
-   * @param solver The LDLT decomposition of which to compute the inertia.
+   * @param solver The LBLT decomposition of which to compute the inertia.
    */
   explicit Inertia(
-      const Eigen::SimplicialLDLT<Eigen::SparseMatrix<double>>& solver) {
-    auto D = solver.vectorD();
-    for (int row = 0; row < D.rows(); ++row) {
-      if (D(row) > 0.0) {
+      const Eigen::BlockedLBLT<Eigen::SparseMatrix<double>>& solver) {
+    auto B = solver.matrixB();
+    for (int row = 0; row < B.rows(); ++row) {
+      if (B.coeff(row, row) > 0.0) {
         ++positive;
-      } else if (D(row) < 0.0) {
+      } else if (B.coeff(row, row) < 0.0) {
         ++negative;
       } else {
         ++zero;
