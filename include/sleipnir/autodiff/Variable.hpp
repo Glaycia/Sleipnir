@@ -221,9 +221,6 @@ class SLEIPNIR_DLLEXPORT Variable {
   //! @endcond
 };
 
-using VectorXvar = Eigen::Vector<Variable, Eigen::Dynamic>;
-using MapVectorXvar = Eigen::Map<VectorXvar>;
-
 /**
  * std::abs() for Variables.
  *
